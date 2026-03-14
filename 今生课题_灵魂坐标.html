@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今生课题 · 灵魂坐标 · 北交点 × 八字大运</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep:  #080612;
+  --gold:  #c9a84c;
+  --gold2: #e8c97a;
+  --cream: #f0e8d8;
+  --mist:  #9b8fb5;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--deep);color:var(--cream);font-family:'Noto Serif SC',serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── Background ── */
+.bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 48%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 37% 18%,rgba(201,168,76,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 53% 72%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 33%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 79% 62%,rgba(201,168,76,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 8%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 82%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 44% 57%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 87% 77%,rgba(201,168,76,.4) 0%,transparent 100%);}
+.bg-nebula{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 55% 35% at 15% 25%,rgba(107,79,160,.14) 0%,transparent 70%),
+    radial-gradient(ellipse 45% 55% at 85% 75%,rgba(60,30,120,.16) 0%,transparent 70%),
+    radial-gradient(ellipse 30% 40% at 70% 15%,rgba(196,122,138,.08) 0%,transparent 70%);}
+
+.wrap{position:relative;z-index:10;max-width:700px;margin:0 auto;padding:56px 20px 100px;}
+
+/* ── Header ── */
+.header{text-align:center;margin-bottom:48px;animation:fadeDown .9s ease both;}
+.mandala{width:90px;height:90px;margin:0 auto 20px;animation:spinSlow 28s linear infinite;}
+.mandala svg{width:100%;height:100%;}
+@keyframes spinSlow{to{transform:rotate(360deg);}}
+.eyebrow{font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;color:var(--gold);opacity:.75;text-transform:uppercase;margin-bottom:10px;}
+.h-title{font-size:30px;font-weight:300;letter-spacing:8px;margin-bottom:6px;}
+.h-sub{font-size:12px;color:var(--mist);letter-spacing:3px;}
+.gold-line{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto;}
+
+/* ── Cards ── */
+.card{background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.13);border-radius:16px;padding:32px;margin-bottom:20px;backdrop-filter:blur(12px);animation:fadeUp .7s ease both;}
+.card-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.card-label::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.18);}
+
+/* ── Form inputs ── */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.fg.full{grid-column:1/-1;}
+label{font-size:10px;letter-spacing:2px;color:var(--mist);}
+input,select{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:11px 14px;color:var(--cream);font-family:'Noto Serif SC',serif;font-size:14px;outline:none;transition:all .3s;-webkit-appearance:none;}
+input:focus,select:focus{border-color:var(--gold);background:rgba(201,168,76,.07);box-shadow:0 0 18px rgba(201,168,76,.1);}
+select option{background:#120e24;}
+.gender-row{display:flex;gap:10px;}
+.gbtn{flex:1;padding:11px;border:1px solid rgba(201,168,76,.18);border-radius:8px;background:rgba(255,255,255,.03);color:var(--mist);font-family:'Noto Serif SC',serif;font-size:14px;cursor:pointer;transition:all .3s;letter-spacing:2px;text-align:center;}
+.gbtn.on,.gbtn:hover{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold2);}
+
+/* ── Buttons ── */
+.btn-gold{width:100%;padding:17px;background:linear-gradient(135deg,rgba(201,168,76,.22),rgba(201,168,76,.1));border:1px solid var(--gold);border-radius:12px;color:var(--gold2);font-family:'Noto Serif SC',serif;font-size:16px;letter-spacing:4px;cursor:pointer;transition:all .4s;position:relative;overflow:hidden;margin-top:6px;}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(201,168,76,.18),transparent);transform:translateX(-100%);transition:transform .6s;}
+.btn-gold:hover::before{transform:translateX(100%);}
+.btn-gold:hover{background:linear-gradient(135deg,rgba(201,168,76,.32),rgba(201,168,76,.16));box-shadow:0 0 28px rgba(201,168,76,.2);transform:translateY(-1px);}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-text{background:none;border:none;color:var(--mist);font-family:'Noto Serif SC',serif;font-size:12px;letter-spacing:2px;cursor:pointer;margin-top:16px;display:block;width:100%;text-align:center;transition:color .3s;}
+.btn-text:hover{color:var(--gold);}
+
+/* ── Usage counter ── */
+.usage-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;margin-bottom:20px;}
+.usage-left{font-size:12px;color:var(--mist);letter-spacing:1px;}
+.usage-dots{display:flex;gap:8px;}
+.dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.08);transition:all .4s;}
+.dot.used{background:rgba(201,168,76,.5);border-color:var(--gold);box-shadow:0 0 8px rgba(201,168,76,.3);}
+.dot.current{background:var(--gold);border-color:var(--gold2);box-shadow:0 0 12px rgba(201,168,76,.5);}
+
+/* ── Redeem section ── */
+.redeem-hero{text-align:center;padding:40px 20px;margin-bottom:8px;}
+.redeem-icon{font-size:48px;margin-bottom:20px;display:block;}
+.redeem-title{font-size:24px;font-weight:300;letter-spacing:4px;margin-bottom:8px;}
+.redeem-sub{font-size:13px;color:var(--mist);letter-spacing:2px;line-height:2;}
+.code-input{text-align:center;font-size:20px;letter-spacing:8px;text-transform:uppercase;font-weight:600;}
+
+/* ── Loading ── */
+#loadingSection{display:none;text-align:center;padding:72px 0;}
+#loadingSection.show{display:block;}
+.orbit{width:90px;height:90px;margin:0 auto 28px;position:relative;}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px solid transparent;animation:spin 2s linear infinite;}
+.ring:nth-child(1){border-top-color:var(--gold);animation-duration:1.4s;}
+.ring:nth-child(2){border-right-color:rgba(201,168,76,.5);animation-duration:2.3s;animation-direction:reverse;inset:14px;}
+.ring:nth-child(3){border-bottom-color:rgba(201,168,76,.3);animation-duration:3.2s;inset:28px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-msg{font-size:13px;color:var(--mist);letter-spacing:3px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* ── Result ── */
+#resultSection{display:none;}
+#resultSection.show{display:block;animation:fadeUp .8s ease;}
+.result-hero{text-align:center;margin-bottom:36px;}
+.user-badge{display:inline-block;padding:7px 22px;border:1px solid var(--gold);border-radius:30px;color:var(--gold2);font-size:12px;letter-spacing:3px;margin-bottom:18px;}
+.headline-text{font-size:24px;font-weight:300;letter-spacing:3px;line-height:1.5;margin-bottom:6px;}
+.headline-sub{font-size:13px;color:var(--mist);letter-spacing:2px;}
+
+.action-box{background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.4);border-radius:16px;padding:28px 32px;margin-bottom:20px;text-align:center;}
+.action-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:var(--gold);margin-bottom:14px;opacity:.8;}
+.action-main{font-size:22px;font-weight:600;color:var(--gold2);letter-spacing:2px;margin-bottom:16px;line-height:1.4;}
+.action-why{font-size:14px;color:rgba(240,232,216,.8);line-height:2;font-weight:300;}
+
+.node-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+.node-card{border-radius:12px;padding:22px 18px;text-align:center;}
+.node-card.north{background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.03));border:1px solid rgba(201,168,76,.28);}
+.node-card.south{background:linear-gradient(135deg,rgba(107,79,160,.1),rgba(107,79,160,.03));border:1px solid rgba(107,79,160,.3);}
+.node-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;margin-bottom:10px;opacity:.7;}
+.north .node-lbl{color:var(--gold);}
+.south .node-lbl{color:#a888d0;}
+.node-sign{font-size:20px;font-weight:300;letter-spacing:2px;margin-bottom:5px;}
+.north .node-sign{color:var(--gold2);}
+.south .node-sign{color:#c4a0e8;}
+.node-detail{font-size:11px;color:var(--mist);letter-spacing:1px;line-height:1.8;}
+
+.bazi-pills{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;}
+.bz-pill{padding:6px 14px;background:rgba(74,155,142,.1);border:1px solid rgba(74,155,142,.3);border-radius:20px;font-size:12px;color:#7eccc3;letter-spacing:2px;}
+
+.s-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--gold);opacity:.75;margin-bottom:12px;}
+.s-text{font-size:15px;line-height:2;color:rgba(240,232,216,.85);font-weight:300;}
+.s-divider{width:100%;height:1px;background:rgba(201,168,76,.1);margin:20px 0;}
+
+.actions-list{display:flex;flex-direction:column;gap:14px;margin-top:4px;}
+.action-item{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.1);border-radius:10px;}
+.action-num{width:26px;height:26px;flex-shrink:0;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:10px;color:var(--gold);margin-top:2px;}
+.action-title{font-size:14px;color:var(--gold2);letter-spacing:1px;margin-bottom:5px;}
+.action-detail{font-size:13px;color:var(--mist);line-height:1.9;font-weight:300;}
+
+.closing-block{text-align:center;padding:32px;border:1px solid rgba(201,168,76,.15);border-radius:16px;background:rgba(201,168,76,.03);margin-top:20px;}
+.closing-text{font-size:16px;line-height:2;color:var(--cream);font-weight:300;letter-spacing:1px;font-style:italic;}
+.closing-sig{font-size:11px;color:var(--mist);letter-spacing:3px;margin-top:14px;}
+
+/* ── Buy CTA ── */
+.buy-cta{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:28px;text-align:center;margin-top:24px;}
+.buy-title{font-size:16px;letter-spacing:2px;margin-bottom:8px;}
+.buy-desc{font-size:13px;color:var(--mist);line-height:2;margin-bottom:16px;}
+.buy-price{font-family:'Cinzel',serif;font-size:32px;color:var(--gold);margin-bottom:16px;}
+.buy-price small{font-size:13px;color:var(--mist);text-decoration:line-through;margin-left:8px;}
+.buy-btn{display:inline-block;padding:14px 48px;background:linear-gradient(135deg,var(--gold),#a07830);border-radius:30px;color:#080612;font-family:'Noto Serif SC',serif;font-size:15px;letter-spacing:3px;cursor:pointer;border:none;font-weight:600;transition:all .3s;box-shadow:0 4px 20px rgba(201,168,76,.3);}
+.buy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,.4);}
+
+.disclaimer{text-align:center;font-size:11px;color:rgba(155,143,181,.35);letter-spacing:1px;line-height:2;margin-top:28px;padding:0 16px;}
+.err-box{background:rgba(196,122,138,.08);border:1px solid rgba(196,122,138,.3);border-radius:10px;padding:14px 18px;color:#e8a0b0;font-size:13px;line-height:1.8;display:none;margin-top:12px;}
+.err-box.show{display:block;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+@media(max-width:480px){.row{grid-template-columns:1fr;}.node-grid{grid-template-columns:1fr;}.h-title{font-size:24px;}.card{padding:22px;}}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--deep);}::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- ★ 替换这里的配置 ★ -->
+<script>
+  const CONFIG = {
+    SUPABASE_URL:  'YOUR_SUPABASE_URL',        // 如：https://xxxx.supabase.co
+    SUPABASE_ANON: 'YOUR_SUPABASE_ANON_KEY',   // Supabase 匿名公钥
+    CLAUDE_KEY:    'YOUR_CLAUDE_API_KEY',       // Claude API Key（藏在这里，不对外暴露）
+    BUY_URL:       'YOUR_HUPIJIAO_PAYMENT_URL', // 虎皮椒商品购买链接
+  }
+</script>
+
+<div class="bg-stars"></div>
+<div class="bg-nebula"></div>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="mandala">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="47" stroke="rgba(201,168,76,.18)" stroke-width=".5"/>
+        <circle cx="50" cy="50" r="37" stroke="rgba(201,168,76,.28)" stroke-width=".5" stroke-dasharray="4 3"/>
+        <circle cx="50" cy="50" r="27" stroke="rgba(201,168,76,.38)" stroke-width=".5"/>
+        <circle cx="50" cy="50" r="17" stroke="rgba(201,168,76,.55)" stroke-width=".5" stroke-dasharray="2 2"/>
+        <circle cx="50" cy="50" r="5.5" fill="rgba(201,168,76,.55)"/>
+        <g stroke="rgba(201,168,76,.3)" stroke-width=".5">
+          <line x1="50" y1="3" x2="50" y2="21"/><line x1="50" y1="79" x2="50" y2="97"/>
+          <line x1="3" y1="50" x2="21" y2="50"/><line x1="79" y1="50" x2="97" y2="50"/>
+          <line x1="16" y1="16" x2="29" y2="29"/><line x1="71" y1="71" x2="84" y2="84"/>
+          <line x1="84" y1="16" x2="71" y2="29"/><line x1="16" y1="84" x2="29" y2="71"/>
+        </g>
+        <circle cx="50" cy="13" r="1.5" fill="rgba(201,168,76,.8)"/>
+        <circle cx="73" cy="20" r="1" fill="rgba(201,168,76,.6)"/>
+        <circle cx="87" cy="50" r="1" fill="rgba(201,168,76,.6)"/>
+        <circle cx="50" cy="87" r="1.5" fill="rgba(201,168,76,.8)"/>
+        <circle cx="27" cy="20" r="1" fill="rgba(201,168,76,.6)"/>
+        <circle cx="13" cy="50" r="1" fill="rgba(201,168,76,.6)"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Soul Coordinates · Life Purpose Reading</div>
+    <div class="h-title">今生课题 · 灵魂坐标</div>
+    <div class="h-sub">北交点 × 八字大运，看见你今生真正该做的事</div>
+    <div class="gold-line"></div>
+  </div>
+
+  <!-- ── STEP 1：兑换码验证 ── -->
+  <div id="redeemSection">
+    <div class="card">
+      <div class="redeem-hero">
+        <span class="redeem-icon">🔮</span>
+        <div class="redeem-title">输入兑换码</div>
+        <div class="redeem-sub">
+          购买后你的手机将收到一条短信<br>
+          内含8位专属兑换码，输入即可解锁测算
+        </div>
+      </div>
+      <div class="fg">
+        <label>兑换码（8位大写字母+数字）</label>
+        <input type="text" id="codeInput" class="code-input"
+          placeholder="如：MYL8X3KP"
+          maxlength="8"
+          oninput="this.value=this.value.toUpperCase()"
+        />
+      </div>
+      <div id="redeemErr" class="err-box"></div>
+      <button class="btn-gold" onclick="verifyCode()" id="redeemBtn">✦ 验证兑换码 ✦</button>
+    </div>
+
+    <div class="buy-cta">
+      <div class="buy-title">还没有兑换码？</div>
+      <div class="buy-desc">¥9.9 解锁3次专属测算机会<br>北交点 × 八字大运 · AI深度个性化解读</div>
+      <div class="buy-price">¥9.9</div>
+      <button class="buy-btn" onclick="window.open(CONFIG.BUY_URL,'_blank')">立即购买 →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2：填写出生信息 ── -->
+  <div id="formSection" style="display:none;">
+
+    <!-- 使用次数显示 -->
+    <div class="usage-bar" id="usageBar">
+      <div class="usage-left">剩余次数</div>
+      <div class="usage-dots" id="usageDots"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">你的出生信息</div>
+      <div class="row">
+        <div class="fg">
+          <label>姓名 / 昵称</label>
+          <input type="text" id="name" placeholder="你的名字"/>
+        </div>
+        <div class="fg">
+          <label>性别</label>
+          <div class="gender-row">
+            <div class="gbtn on" onclick="setGender(this,'女')">♀ 女</div>
+            <div class="gbtn"    onclick="setGender(this,'男')">♂ 男</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="fg">
+          <label>出生日期（公历）</label>
+          <input type="date" id="birthDate"/>
+        </div>
+        <div class="fg">
+          <label>出生时间（尽量精确）</label>
+          <input type="time" id="birthTime"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="fg full">
+          <label>出生城市</label>
+          <select id="birthCity">
+            <option value="">请选择</option>
+            <optgroup label="直辖市">
+              <option>北京</option><option>上海</option><option>天津</option><option>重庆</option>
+            </optgroup>
+            <optgroup label="华东">
+              <option>杭州</option><option>南京</option><option>苏州</option><option>宁波</option>
+              <option>合肥</option><option>福州</option><option>厦门</option>
+            </optgroup>
+            <optgroup label="华南">
+              <option>广州</option><option>深圳</option><option>珠海</option><option>佛山</option>
+              <option>东莞</option><option>南宁</option><option>海口</option>
+            </optgroup>
+            <optgroup label="华中">
+              <option>武汉</option><option>长沙</option><option>郑州</option><option>南昌</option>
+            </optgroup>
+            <optgroup label="华北">
+              <option>石家庄</option><option>太原</option><option>呼和浩特</option>
+            </optgroup>
+            <optgroup label="东北">
+              <option>沈阳</option><option>大连</option><option>长春</option><option>哈尔滨</option>
+            </optgroup>
+            <optgroup label="西部">
+              <option>成都</option><option>西安</option><option>昆明</option><option>贵阳</option>
+              <option>兰州</option><option>西宁</option><option>乌鲁木齐</option><option>拉萨</option>
+            </optgroup>
+            <optgroup label="港澳台及海外">
+              <option>香港</option><option>澳门</option><option>台北</option>
+              <option>新加坡</option><option>其他海外城市</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div id="formErr" class="err-box"></div>
+      <button class="btn-gold" onclick="startReading()" id="submitBtn">✦ 开启我的命盘解读 ✦</button>
+      <button class="btn-text" onclick="changeCode()">使用其他兑换码</button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:rgba(155,143,181,.3);letter-spacing:1.5px;margin-top:10px;">
+      本报告基于占星与八字文化传统，仅供参考，不构成专业建议
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingSection">
+    <div class="orbit">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    </div>
+    <div class="loading-msg" id="loadingMsg">正在推算命盘...</div>
+  </div>
+
+  <!-- ── STEP 3：完整报告 ── -->
+  <div id="resultSection">
+
+    <!-- 使用次数（报告页也显示） -->
+    <div class="usage-bar" id="usageBar2">
+      <div class="usage-left">本次解读 · 剩余次数</div>
+      <div class="usage-dots" id="usageDots2"></div>
+    </div>
+
+    <div class="result-hero">
+      <div class="user-badge" id="rBadge">✦ 专属命盘 ✦</div>
+      <div class="headline-text" id="rHeadline"></div>
+      <div class="headline-sub" id="rSub"></div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-eyebrow">今年最该做的一件事</div>
+      <div class="action-main" id="rAction"></div>
+      <div class="action-why" id="rActionWhy"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">核心洞见</div>
+      <div class="s-text" id="rInsight"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">月交点轴线</div>
+      <div class="node-grid">
+        <div class="node-card north">
+          <div class="node-lbl">North Node · 北交点</div>
+          <div class="node-sign" id="rNorthSign"></div>
+          <div class="node-detail" id="rNorthDetail"></div>
+        </div>
+        <div class="node-card south">
+          <div class="node-lbl">South Node · 南交点</div>
+          <div class="node-sign" id="rSouthSign"></div>
+          <div class="node-detail" id="rSouthDetail"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">八字大运</div>
+      <div class="bazi-pills" id="rBaziPills"></div>
+      <div class="s-label" style="margin-top:16px;">当前大运</div>
+      <div class="s-text" id="rYun"></div>
+      <div class="s-divider"></div>
+      <div class="s-label">今年流年影响</div>
+      <div class="s-text" id="rYear"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">今生灵魂使命</div>
+      <div class="s-text" id="rMission"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">南交点的惯性印记</div>
+      <div class="s-text" id="rShadow"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">你现在处于人生哪个阶段</div>
+      <div class="s-text" id="rPhase"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">今年的机遇窗口</div>
+      <div class="s-text" id="rWindow"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">三个具体行动</div>
+      <div class="actions-list" id="rActions"></div>
+    </div>
+
+    <div class="closing-block">
+      <div class="closing-text" id="rClosing"></div>
+      <div class="closing-sig">— 今生课题 · 灵魂坐标 ✦ 专属解读 —</div>
+    </div>
+
+    <div class="disclaimer">
+      本报告基于西方占星与中国八字命理的文化传统，提供个人成长与自我探索的参考视角。<br>
+      命理是一面镜子，不是一条轨道。你永远是自己人生的主角与决策者。
+    </div>
+
+    <!-- 次数用完时显示的购买 CTA -->
+    <div id="buyCta" class="buy-cta" style="display:none;margin-top:24px;">
+      <div class="buy-title">✦ 3次机会已全部使用</div>
+      <div class="buy-desc">每一次出生信息不同，就会有全新的解读维度<br>重新购买，继续探索你的灵魂地图</div>
+      <div class="buy-price">¥9.9</div>
+      <button class="buy-btn" onclick="window.open(CONFIG.BUY_URL,'_blank')">再次购买 →</button>
+    </div>
+
+    <!-- 还有次数时显示的"再测一次"按钮 -->
+    <button class="btn-text" id="retestBtn" onclick="goBackToForm()" style="margin-top:20px;">
+      ↺ 使用剩余次数再测一次
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let gender       = '女'
+let currentCode  = ''
+let remaining    = 0
+let totalUses    = 3
+
+// ── 从成功页跳转过来时，自动填入并验证兑换码 ──
+;(function autoStartFromSuccess() {
+  const p        = new URLSearchParams(window.location.search)
+  const urlCode  = p.get('code')
+  const autoStart = p.get('autostart')
+
+  if (urlCode && autoStart === '1') {
+    // 页面加载完成后自动触发验证
+    window.addEventListener('DOMContentLoaded', async () => {
+      const input = document.getElementById('codeInput')
+      if (input) {
+        input.value = urlCode.toUpperCase()
+        // 短暂延迟让页面渲染完毕，体验更顺滑
+        setTimeout(() => verifyCode(), 600)
+      }
+    })
+  } else if (urlCode) {
+    // 只带 code 不带 autostart：仅填入，不自动验证
+    window.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('codeInput')
+      if (input) input.value = urlCode.toUpperCase()
+    })
+  }
+})()
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+function setGender(el, g) {
+  gender = g
+  document.querySelectorAll('.gbtn').forEach(b => b.classList.remove('on'))
+  el.classList.add('on')
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id)
+  el.textContent = msg
+  el.classList.add('show')
+}
+function hideErr(id) {
+  document.getElementById(id).classList.remove('show')
+}
+
+function renderDots(containerId, used, total) {
+  const el = document.getElementById(containerId)
+  el.innerHTML = ''
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div')
+    if (i < used) {
+      d.className = 'dot used'
+    } else if (i === used) {
+      d.className = 'dot current'
+    } else {
+      d.className = 'dot'
+    }
+    el.appendChild(d)
+  }
+}
+
+// ══════════════════════════════════════════════
+//  STEP 1：验证兑换码
+// ══════════════════════════════════════════════
+async function verifyCode() {
+  const code = document.getElementById('codeInput').value.trim().toUpperCase()
+  hideErr('redeemErr')
+
+  if (!code || code.length !== 8) {
+    showErr('redeemErr', '请输入8位兑换码')
+    return
+  }
+
+  const btn = document.getElementById('redeemBtn')
+  btn.disabled = true
+  btn.textContent = '验证中...'
+
+  try {
+    // 查询 Supabase codes 表
+    const res = await fetch(
+      `${CONFIG.SUPABASE_URL}/rest/v1/codes?code=eq.${code}&select=code,used_count,total_uses,is_active,expires_at`,
+      { headers: { 'apikey': CONFIG.SUPABASE_ANON, 'Authorization': `Bearer ${CONFIG.SUPABASE_ANON}` } }
+    )
+    const data = await res.json()
+
+    if (!data.length) {
+      showErr('redeemErr', '兑换码不存在，请检查是否输入正确')
+      return
+    }
+
+    const row = data[0]
+
+    if (!row.is_active) {
+      showErr('redeemErr', '此兑换码已失效')
+      return
+    }
+
+    if (new Date(row.expires_at) < new Date()) {
+      showErr('redeemErr', '此兑换码已过期（有效期30天）')
+      return
+    }
+
+    if (row.used_count >= row.total_uses) {
+      showErr('redeemErr', '此兑换码的3次使用机会已全部用完，请重新购买')
+      return
+    }
+
+    // 验证通过
+    currentCode = code
+    remaining   = row.total_uses - row.used_count
+    totalUses   = row.total_uses
+
+    // 切换到表单页
+    document.getElementById('redeemSection').style.display = 'none'
+    document.getElementById('formSection').style.display   = 'block'
+    renderDots('usageDots', row.used_count, row.total_uses)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+  } catch (err) {
+    showErr('redeemErr', '验证失败，请稍后重试：' + err.message)
+  } finally {
+    btn.disabled    = false
+    btn.textContent = '✦ 验证兑换码 ✦'
+  }
+}
+
+function changeCode() {
+  currentCode = ''
+  document.getElementById('codeInput').value = ''
+  document.getElementById('formSection').style.display   = 'none'
+  document.getElementById('redeemSection').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+// ══════════════════════════════════════════════
+//  STEP 2：生成报告
+// ══════════════════════════════════════════════
+const LOADING_MSGS = [
+  '正在推算八字命盘...',
+  '解读北交点轨迹...',
+  '分析南交点印记...',
+  '计算当前大运流年...',
+  '融合中西命理体系...',
+  '生成你的专属洞见...',
+  '即将完成，请稍候...',
+]
+
+const SYSTEM_PROMPT = `你是「今生课题 · 灵魂坐标」的灵性解读师，融合西方占星与中国八字命理，帮助用户深度认识自己、找到人生方向。
+
+你的角色：像一位同时懂占星和八字的智慧朋友——有温度、有立场、有深度，让人感到「被看见」而不是「被糊弄」。
+
+北交点完整历史数据（True Node，1930—2026）：
+- 1930.07.07—1931.12.28：北交金牛，南交天蝎
+- 1931.12.28—1933.06.24：北交白羊，南交天秤
+- 1933.06.24—1935.03.08：北交双鱼，南交处女
+- 1935.03.08—1936.09.14：北交水瓶，南交狮子
+- 1936.09.14—1938.03.03：北交摩羯，南交巨蟹
+- 1938.03.03—1939.09.11：北交射手，南交双子
+- 1939.09.11—1941.05.24：北交天蝎，南交金牛
+- 1941.05.24—1942.11.21：北交天秤，南交白羊
+- 1942.11.21—1944.05.11：北交处女，南交双鱼
+- 1944.05.11—1945.12.03：北交狮子，南交水瓶
+- 1945.12.03—1947.08.02：北交巨蟹，南交摩羯
+- 1947.08.02—1949.01.26：北交双子，南交射手
+- 1949.01.26—1950.07.26：北交金牛，南交天蝎
+- 1950.07.26—1952.03.28：北交白羊，南交天秤
+- 1952.03.28—1953.10.09：北交双鱼，南交处女
+- 1953.10.09—1955.04.02：北交水瓶，南交狮子
+- 1955.04.02—1956.10.04：北交摩羯，南交巨蟹
+- 1956.10.04—1958.06.16：北交射手，南交双子
+- 1958.06.16—1959.12.15：北交天蝎，南交金牛
+- 1959.12.15—1961.06.10：北交天秤，南交白羊
+- 1961.06.10—1962.12.23：北交处女，南交双鱼
+- 1962.12.23—1964.08.25：北交狮子，南交水瓶
+- 1964.08.25—1966.02.19：北交巨蟹，南交摩羯
+- 1966.02.19—1967.08.19：北交双子，南交射手
+- 1967.08.19—1969.04.19：北交金牛，南交天蝎
+- 1969.04.19—1970.11.02：北交白羊，南交天秤
+- 1970.11.02—1972.04.27：北交双鱼，南交处女
+- 1972.04.27—1973.10.27：北交水瓶，南交狮子
+- 1973.10.27—1975.07.09：北交摩羯，南交巨蟹
+- 1975.07.09—1977.01.07：北交射手，南交双子
+- 1977.01.07—1978.07.05：北交天蝎，南交金牛
+- 1978.07.05—1980.01.05：北交天秤，南交白羊
+- 1980.01.05—1981.09.24：北交处女，南交双鱼
+- 1981.09.24—1983.03.16：北交狮子，南交水瓶
+- 1983.03.16—1984.09.11：北交巨蟹，南交摩羯
+- 1984.09.11—1986.04.06：北交双子，南交射手
+- 1986.04.06—1987.12.02：北交金牛，南交天蝎
+- 1987.12.02—1989.05.22：北交白羊，南交天秤
+- 1989.05.22—1990.11.18：北交双鱼，南交处女
+- 1990.11.18—1992.08.01：北交水瓶，南交狮子
+- 1992.08.01—1994.02.01：北交摩羯，南交巨蟹
+- 1994.02.01—1995.07.31：北交射手，南交双子
+- 1995.07.31—1997.01.25：北交天蝎，南交金牛
+- 1997.01.25—1998.10.20：北交天秤，南交白羊
+- 1998.10.20—2000.04.09：北交处女，南交双鱼
+- 2000.04.09—2001.10.13：北交狮子，南交水瓶
+- 2001.10.13—2003.04.14：北交巨蟹，南交摩羯
+- 2003.04.14—2004.12.26：北交双子，南交射手
+- 2004.12.26—2006.06.22：北交金牛，南交天蝎
+- 2006.06.22—2007.12.18：北交白羊，南交天秤
+- 2007.12.18—2009.08.21：北交双鱼，南交处女
+- 2009.08.21—2011.03.03：北交水瓶，南交狮子
+- 2011.03.03—2012.08.29：北交摩羯，南交巨蟹
+- 2012.08.29—2014.02.18：北交射手，南交双子
+- 2014.02.18—2015.11.11：北交天蝎，南交金牛
+- 2015.11.11—2017.05.10：北交处女，南交双鱼
+- 2017.05.10—2018.11.15：北交狮子，南交水瓶
+- 2018.11.15—2020.05.05：北交巨蟹，南交摩羯
+- 2020.05.05—2022.01.18：北交双子，南交射手
+- 2022.01.18—2023.07.17：北交金牛，南交天蝎
+- 2023.07.17—2025.01.11：北交白羊，南交天秤
+- 2025.01.11—2026.07.26：北交双鱼，南交处女
+
+八字推算规则：
+- 十天干：甲乙木、丙丁火、戊己土、庚辛金、壬癸水
+- 大运：男命阳年顺推，男命阴年逆推；女命阳年逆推，女命阴年顺推
+- 起运年龄：出生日与最近节气间距天数÷3
+- 2025年=乙巳年，2026年=丙午年
+
+语言风格：有温度有立场，用「你」，直接具体，避免算命口吻和空洞鸡汤。
+合规边界：不预测具体事件，不给医疗/法律/投资建议，用户永远是自己的主角。`
+
+function buildPrompt(info) {
+  return `请为以下用户生成完整命盘解读：
+
+姓名：${info.name}
+性别：${info.gender}
+出生日期（公历）：${info.birthDate}
+出生时间：${info.birthTime || '未知，请合理推断'}
+出生城市：${info.birthCity}
+当前年份：${new Date().getFullYear()}年
+
+请按数据表精确推算北交点星座，推算八字和当前大运，三者交叉得出今年核心方向。
+
+只输出纯JSON，首字符{，末字符}，无其他文字：
+{
+  "northNode":{"sign":"","house":"","houseMeaning":"","coreGrowth":""},
+  "southNode":{"sign":"","comfortZone":"","giftToKeep":""},
+  "bazi":{"eightChars":"","currentYun":"","yunElement":"","yunMeaning":"","yearGanzhi":"","yearInfluence":""},
+  "synthesis":{"headline":"","coreInsight":"","thisYearAction":"","actionWhy":""},
+  "fullReport":{
+    "soulMission":"",
+    "shadowPattern":"",
+    "currentPhase":"",
+    "thisYearWindow":"",
+    "threeActions":[
+      {"title":"","detail":""},
+      {"title":"","detail":""},
+      {"title":"","detail":""}
+    ]
+  },
+  "closing":""
+}`
+}
+
+async function startReading() {
+  const name      = document.getElementById('name').value.trim() || '你'
+  const birthDate = document.getElementById('birthDate').value
+  const birthTime = document.getElementById('birthTime').value
+  const birthCity = document.getElementById('birthCity').value
+  hideErr('formErr')
+
+  if (!birthDate) { showErr('formErr', '请填写出生日期'); return }
+  if (!birthCity) { showErr('formErr', '请选择出生城市'); return }
+
+  // 先在 Supabase 原子扣减次数
+  try {
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/use_code`, {
+      method: 'POST',
+      headers: {
+        'apikey': CONFIG.SUPABASE_ANON,
+        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        p_code:   currentCode,
+        p_name:   name,
+        p_gender: gender,
+        p_birth:  birthDate,
+        p_city:   birthCity
+      })
+    })
+    const result = await res.json()
+    if (!result.success) { showErr('formErr', result.message); return }
+
+    remaining = result.remaining
+
+  } catch(err) {
+    showErr('formErr', '次数验证失败，请重试：' + err.message)
+    return
+  }
+
+  // 切换到 loading
+  document.getElementById('submitBtn').disabled = true
+  document.getElementById('formSection').style.display = 'none'
+  const loading = document.getElementById('loadingSection')
+  loading.classList.add('show')
+
+  let mi = 0
+  const ticker = setInterval(() => {
+    document.getElementById('loadingMsg').textContent =
+      LOADING_MSGS[Math.min(mi++, LOADING_MSGS.length - 1)]
+  }, 1000)
+
+  try {
+    const report = await callClaude({ name, gender, birthDate, birthTime, birthCity })
+    clearInterval(ticker)
+    loading.classList.remove('show')
+    renderReport(report, name)
+  } catch(err) {
+    clearInterval(ticker)
+    loading.classList.remove('show')
+    document.getElementById('formSection').style.display = 'block'
+    document.getElementById('submitBtn').disabled = false
+    showErr('formErr', '报告生成失败，请重试：' + err.message)
+  }
+}
+
+async function callClaude(info) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': CONFIG.CLAUDE_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2800,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: buildPrompt(info) }]
+    })
+  })
+
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}))
+    throw new Error(e.error?.message || `HTTP ${res.status}`)
+  }
+
+  const data  = await res.json()
+  const text  = data.content.filter(b => b.type === 'text').map(b => b.text).join('')
+  const match = text.match(/\{[\s\S]*\}/)
+  if (!match) throw new Error('报告解析失败，请重试')
+  return JSON.parse(match[0])
+}
+
+// ══════════════════════════════════════════════
+//  RENDER REPORT
+// ══════════════════════════════════════════════
+function renderReport(r, name) {
+  const usedNow = totalUses - remaining
+
+  // 更新次数点
+  renderDots('usageDots2', usedNow, totalUses)
+
+  // Hero
+  document.getElementById('rBadge').textContent    = `✦ ${name} 的专属命盘 ✦`
+  document.getElementById('rHeadline').textContent = r.synthesis?.headline || '灵魂的旅程'
+  document.getElementById('rSub').textContent      =
+    `北交${r.northNode?.sign||''} · 南交${r.southNode?.sign||''} · ${r.bazi?.currentYun||''}`
+
+  // Action
+  document.getElementById('rAction').textContent    = r.synthesis?.thisYearAction || ''
+  document.getElementById('rActionWhy').textContent = r.synthesis?.actionWhy || ''
+
+  // Insight
+  document.getElementById('rInsight').textContent = r.synthesis?.coreInsight || ''
+
+  // Nodes
+  document.getElementById('rNorthSign').textContent  = r.northNode?.sign || ''
+  document.getElementById('rNorthDetail').innerHTML  =
+    `${r.northNode?.house||''} · ${r.northNode?.houseMeaning||''}<br>
+     <span style="font-size:11px;color:rgba(201,168,76,.7)">${r.northNode?.coreGrowth||''}</span>`
+  document.getElementById('rSouthSign').textContent  = r.southNode?.sign || ''
+  document.getElementById('rSouthDetail').innerHTML  =
+    `${r.southNode?.comfortZone||''}<br>
+     <span style="font-size:11px;color:rgba(164,136,208,.7)">天赋：${r.southNode?.giftToKeep||''}</span>`
+
+  // Bazi
+  const pills = document.getElementById('rBaziPills')
+  pills.innerHTML = ''
+  ;[
+    r.bazi?.eightChars ? '八字：' + r.bazi.eightChars : null,
+    r.bazi?.currentYun ? '大运：' + r.bazi.currentYun : null,
+    r.bazi?.yunElement ? r.bazi.yunElement + '运' : null,
+    r.bazi?.yearGanzhi ? new Date().getFullYear() + '年 ' + r.bazi.yearGanzhi : null,
+  ].filter(Boolean).forEach(p => {
+    const d = document.createElement('div')
+    d.className = 'bz-pill'; d.textContent = p
+    pills.appendChild(d)
+  })
+  document.getElementById('rYun').textContent  = r.bazi?.yunMeaning || ''
+  document.getElementById('rYear').textContent = r.bazi?.yearInfluence || ''
+
+  // Full report
+  document.getElementById('rMission').textContent = r.fullReport?.soulMission   || ''
+  document.getElementById('rShadow').textContent  = r.fullReport?.shadowPattern  || ''
+  document.getElementById('rPhase').textContent   = r.fullReport?.currentPhase   || ''
+  document.getElementById('rWindow').textContent  = r.fullReport?.thisYearWindow || ''
+
+  const al = document.getElementById('rActions')
+  al.innerHTML = ''
+  ;(r.fullReport?.threeActions || []).forEach((a, i) => {
+    al.innerHTML += `
+      <div class="action-item">
+        <div class="action-num">${i+1}</div>
+        <div>
+          <div class="action-title">${a.title||''}</div>
+          <div class="action-detail">${a.detail||''}</div>
+        </div>
+      </div>`
+  })
+
+  document.getElementById('rClosing').textContent = r.closing || ''
+
+  // 次数控制：用完了显示购买CTA，还有次数显示"再测一次"
+  if (remaining <= 0) {
+    document.getElementById('buyCta').style.display   = 'block'
+    document.getElementById('retestBtn').style.display = 'none'
+  } else {
+    document.getElementById('buyCta').style.display   = 'none'
+    document.getElementById('retestBtn').textContent  = `↺ 使用剩余 ${remaining} 次机会再测一次`
+    document.getElementById('retestBtn').style.display = 'block'
+  }
+
+  document.getElementById('resultSection').classList.add('show')
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function goBackToForm() {
+  document.getElementById('resultSection').classList.remove('show')
+  document.getElementById('submitBtn').disabled = false
+  renderDots('usageDots', totalUses - remaining, totalUses)
+  document.getElementById('formSection').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+</script>
+</body>
+</html>
