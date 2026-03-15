@@ -168,7 +168,7 @@ select option{background:#120e24;}
   const CONFIG = {
     SUPABASE_URL:  'YOUR_SUPABASE_URL',        // 如：https://xxxx.supabase.co
     SUPABASE_ANON: 'YOUR_SUPABASE_ANON_KEY',   // Supabase 匿名公钥
-    CLAUDE_KEY:    'YOUR_CLAUDE_API_KEY',       // Claude API Key（藏在这里，不对外暴露）
+    CLAUDE_KEY:    'YOUR_OPENROUTER_KEY',       // Claude API Key（藏在这里，不对外暴露）
     BUY_URL:       'YOUR_HUPIJIAO_PAYMENT_URL', // 虎皮椒商品购买链接
   }
 </script>
@@ -756,15 +756,15 @@ async function startReading() {
 }
 
 async function callClaude(info) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': CONFIG.CLAUDE_KEY,
-      'anthropic-version': '2023-06-01'
+      'Authorization': `Bearer ${CONFIG.CLAUDE_KEY}`,
+      'HTTP-Referer': 'https://jinshengtike.vercel.app',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'anthropic/claude-sonnet-4-5',
       max_tokens: 2800,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: buildPrompt(info) }]
